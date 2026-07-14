@@ -113,6 +113,9 @@ python -m examples.Au_multispectral.demo_run
 
 ## Quick API
 
+One Bayes stack: `DesignSpace` + `ScalarEISuggester` (LHS + EI).  
+`MixerSession` is only a CSV / syringe wrapper around the same suggester — not a second optimiser.
+
 ```python
 from bayesian_optimization import DesignSpace, ScalarEISuggester
 
@@ -122,11 +125,12 @@ space = DesignSpace(
     sum_equals=50.0,
 )
 opt = ScalarEISuggester(space, maximize=True)
-X0 = opt.sample_initial(10, seed=0)
-X_next = opt.suggest(X0, y, n_points=10)
+X0 = opt.sample_initial(10, seed=0)          # LHS
+X_next = opt.suggest(X0, y, n_points=10)     # EI (+ SumEquals)
+# ProcessOptimizer minimizes; maximize=True passes -y
 ```
 
-ProcessOptimizer minimizes; `maximize=True` passes `-y`.
+Lab CSV loop (same LHS/EI inside):
 
 ```python
 from bayesian_optimization.microfluidics import MixerConfig, MixerSession
@@ -138,12 +142,11 @@ mixer = MixerSession(MixerConfig(
     n_syringes=8, total_speed=50.0, time_synth=30.0,
     separator_syringe=7, time_separator=20.0, legacy_csv=True, maximize=True,
 ))
-recipe = mixer.generate_lhs_iter0(n_points=10)
-next_csv = mixer.suggest_next(iter_idx=0, n_points=10)  # needs *_results.csv
+recipe = mixer.generate_lhs_iter0(n_points=10)           # → ScalarEISuggester.sample_initial
+next_csv = mixer.suggest_next(iter_idx=0, n_points=10)   # needs *_results.csv
 ```
 
 ## Notes
 
-- Library stays chemistry-agnostic; experiment specifics only in `examples/`.
 - Do not casually refactor `ScheduleRunner` control logic.
 - Re-copy `smart_pump_overrides/` after every `smart_pump` reinstall.
