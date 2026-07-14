@@ -44,7 +44,6 @@ Config for MF notebooks: `examples/SLNP_bayes/sample_config.yml`.
 | `space.py` | `DesignSpace`: bounds, `sum_equals`, fixed / linear deps, LHS & rejection sampling |
 | `scalar_ei.py` | `ScalarEISuggester`: ProcessOptimizer GP + EI + SumEquals for one scalar score |
 | `uncertainty.py` | `UncertaintySuggester`: GPyTorch multitask ICM GP + epistemic / UCB suggest |
-| `py.typed` | Marker that the package ships type hints |
 
 ### Microfluidics — `bayesian_optimization/microfluidics/`
 
