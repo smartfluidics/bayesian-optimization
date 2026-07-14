@@ -2,7 +2,7 @@
 
 Bayesian experiment suggestion for [smartfluidics](https://github.com/smartfluidics): microfluidic recipe loops (scalar EI) and multispectral uncertainty sampling (multitask GP).
 
-The installable library has **no hardcoded experiment chemistry**. Concrete setups live in `examples/`. Docs and messages are in English.
+Concrete setups live in `examples/`. Docs and messages are in English.
 
 ## Install
 
