@@ -1,0 +1,2 @@
+# Core library (installable without hardware / GP extras)
+-e .

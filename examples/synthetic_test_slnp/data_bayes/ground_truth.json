@@ -1,0 +1,21 @@
+{
+  "var_names": [
+    "TWEEN",
+    "PEG",
+    "LIPID",
+    "LEY"
+  ],
+  "total_speed": 50.0,
+  "x_star": {
+    "TWEEN": 12.0,
+    "PEG": 18.0,
+    "LIPID": 8.0,
+    "LEY": 12.0
+  },
+  "y_star_noise_free": 0.967032004603562,
+  "n_points": 8,
+  "n_bo_rounds": 3,
+  "noise_std": 0.02,
+  "seed": 0,
+  "maximize": true
+}

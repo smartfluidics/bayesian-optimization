@@ -1,0 +1,2 @@
+# Multitask GP / Au uncertainty example
+-e .[uncertainty]

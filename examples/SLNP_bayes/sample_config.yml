@@ -1,0 +1,109 @@
+channels:
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+- syringe:
+    guide:
+      distancePerRevolution: 10
+    reverseVelocity: 100
+    zeroGap: 500
+    maxSteps: 76800
+    maxVolume: 10000
+    workingVolume: 1000
+    length: 60
+    microStep: 12800
+    calibratePressureZero: false
+  pressurePID:
+  disabled: false
+defaultChannel:
+pairChannels:
+defaultPairChannel:
+thermostat:

@@ -1,0 +1,6 @@
+# MF pump control (smart_pump) — private lab index
+#   pip install -r requirements-hardware.txt
+# Then manually replace pumps.py / communicator.py — see README.
+#
+--extra-index-url https://lab:iUULBNNmgslKVjaX35MA@pypi.stud.mmcs.sfedu.ru
+smart_pump
