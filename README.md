@@ -74,7 +74,6 @@ next_x = sug.suggest(X, Y, n_points=1)
 | [`examples/SLNP_bayes/bayes_mf_loop.ipynb`](examples/SLNP_bayes/bayes_mf_loop.ipynb) | Live MF loop: connect pumps → valves → LHS → `ScheduleRunner` → score → next suggestion |
 | [`examples/synthetic_test_slnp/synthetic_bayes_loop.ipynb`](examples/synthetic_test_slnp/synthetic_bayes_loop.ipynb) | Same SLNP API without hardware (synthetic yield + EI) |
 | [`examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb`](examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb) | Synthetic Au: uncertainty sampling + EI toward a UV/SAXS target |
-| [`examples/Au_multispectral/`](examples/Au_multispectral/) | Station CSV campaign helpers (suggest / LOOCV / plots) |
 
 ## Install
 

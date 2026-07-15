@@ -26,10 +26,6 @@ venv/
 /data/
 examples/**/_out*/
 examples/**/plots/*.png
-examples/**/data/training_ready.csv
-examples/**/data/next_suggestion.csv
-examples/**/data/gp_*.csv
-examples/**/data/epistemic_uncertainty_replay.csv
 *.npy
 *.npz
 .pytest_cache/
