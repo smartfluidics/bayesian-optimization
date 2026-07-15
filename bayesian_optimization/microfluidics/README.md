@@ -2,7 +2,7 @@
 
 Pump client, schedule runner, and dispenser (printer) for lab notebooks.
 
-Install: `smart_pump` (lab index) + optional `pyserial` for the dispenser (printer) — see [root README](../../README.md).
+Install: `smart_pump` + `pyserial` — see [root README](../../README.md).
 
 ---
 
