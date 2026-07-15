@@ -76,7 +76,9 @@ next_x = sug.suggest(X, Y, n_points=1)
 | [`examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb`](examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb) | Synthetic Au: uncertainty sampling + EI toward a UV/SAXS target |
 | [`examples/printer_calibration/printer_calibration.ipynb`](examples/printer_calibration/printer_calibration.ipynb) | Dispenser (printer): home / jog / local origin / `tube_coordinates.json` |
 
-Hardware notes: [`bayesian_optimization/microfluidics/README.md`](bayesian_optimization/microfluidics/README.md).
+## Hardware control
+
+Pump client, `ScheduleRunner`, and dispenser (printer) live in [`bayesian_optimization/microfluidics/`](bayesian_optimization/microfluidics/). Usage examples (schedule without / with printer): [`bayesian_optimization/microfluidics/README.md`](bayesian_optimization/microfluidics/README.md).
 
 ## Install
 
