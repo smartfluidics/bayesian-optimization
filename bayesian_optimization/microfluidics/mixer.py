@@ -1,4 +1,4 @@
-"""Generic microfluidic CSV session over ProcessOptimizer ScalarEISuggester."""
+"""CSV mixer session: schedule I/O around an injected Bayesian suggester."""
 
 from __future__ import annotations
 
@@ -9,17 +9,16 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
+from bayesian_optimization.base import BayesianSuggester
 from bayesian_optimization.microfluidics import recipes
-from bayesian_optimization.scalar_ei import ScalarEISuggester
 from bayesian_optimization.space import DesignSpace
 
 
 @dataclass(frozen=True)
 class MixerConfig:
-    """Experiment-agnostic mixer configuration.
+    """Microfluidic CSV / schedule settings (no optimizer knobs here).
 
-    All reagent names, bounds, syringe map, and schedule timings are provided
-    by the caller (see ``examples/`` for concrete experiment setups).
+    Pass a ``ScalarEISuggester`` or ``UncertaintySuggester`` into ``MixerSession``.
     """
 
     data_dir: str
@@ -34,16 +33,14 @@ class MixerConfig:
     separator_speed: float = 0.0
     time_separator: float | None = None
     results_col: str = "Results"
-    # ProcessOptimizer minimizes; True => scores are maximized via -y.
-    maximize: bool = True
     # Alternating recipe/separator rows with 0-based syringe header.
     legacy_csv: bool = True
 
 
 class MixerSession:
-    """CSV in / CSV out Bayesian mixer session (generic schedule + optimization)."""
+    """CSV in / CSV out session. Optimization strategy comes from ``suggester``."""
 
-    def __init__(self, config: MixerConfig) -> None:
+    def __init__(self, config: MixerConfig, suggester: BayesianSuggester) -> None:
         self.cfg = config
         self.data_dir = Path(config.data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -56,16 +53,18 @@ class MixerSession:
         self.results_col = config.results_col
         self._validate_config()
 
-        self.space = DesignSpace(
-            names=list(self.var_names),
-            bounds={n: config.bounds[n] for n in self.var_names},
-            sum_equals=self.total_speed,
-        )
-        self.suggester = ScalarEISuggester(
-            self.space,
-            random_state=config.random_state,
-            maximize=config.maximize,
-        )
+        self.suggester = suggester
+        self.space = suggester.space
+        if list(self.space.names) != self.var_names:
+            raise ValueError(
+                f"suggester.space.names {list(self.space.names)} must match "
+                f"var_to_syringe keys {self.var_names}"
+            )
+        if self.space.sum_equals is not None and abs(float(self.space.sum_equals) - self.total_speed) > 1e-6:
+            raise ValueError(
+                f"suggester.space.sum_equals={self.space.sum_equals} "
+                f"must match MixerConfig.total_speed={self.total_speed}"
+            )
 
     def _validate_config(self) -> None:
         if not self.var_names:

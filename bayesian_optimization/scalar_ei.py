@@ -35,10 +35,12 @@ class ScalarEISuggester:
     - ``acq_func="EI"``
     - ``n_initial_points=0``
     - batch ask with ``strategy="cl_min"``
-    - ``SumEquals`` when ``DesignSpace.sum_equals`` is set
+    - ``SumEquals`` when ``DesignSpace.sum_equals`` is set and there are no
+      ``fixed`` / ``linear_deps``
 
-    Requires a ``DesignSpace`` without ``fixed`` / ``linear_deps``
-    (those are supported by ``UncertaintySuggester`` / general sampling).
+    Spaces with ``fixed`` / ``linear_deps`` are supported by optimizing the
+    free variables in a box and projecting each suggestion onto the full
+    :class:`DesignSpace` (same station constraints as ``UncertaintySuggester``).
     """
 
     def __init__(
@@ -53,12 +55,12 @@ class ScalarEISuggester:
         acq_optimizer: str = "auto",
     ) -> None:
         _require_process_optimizer()
-        if space.fixed or space.linear_deps:
-            raise ValueError(
-                "ScalarEISuggester supports spaces without fixed/linear_deps. "
-                "Build the free-variable subspace, or use UncertaintySuggester."
-            )
+        free = space.free_names()
+        if not free:
+            raise ValueError("ScalarEISuggester needs at least one free variable")
         self.space = space
+        self._free_names = free
+        self._constrained = bool(space.fixed or space.linear_deps)
         self.random_state = int(random_state)
         self.maximize = bool(maximize)
         self.batch_strategy = batch_strategy
@@ -70,7 +72,7 @@ class ScalarEISuggester:
         return self.space.sample_feasible(
             int(n_points),
             seed=self.random_state if seed is None else int(seed),
-            method="lhs",
+            method="auto",
         )
 
     def suggest(self, X: np.ndarray, y: np.ndarray, n_points: int = 1) -> np.ndarray:
@@ -86,21 +88,36 @@ class ScalarEISuggester:
             return np.zeros((0, self.space.n_dims), dtype=float)
 
         X_arr, y_arr = self._deduplicate(X_arr, y_arr)
+        X_free = self._to_free(X_arr)
         opt = self._make_optimizer()
         sign = -1.0 if self.maximize else 1.0
-        for x_i, y_i in zip(X_arr, y_arr):
+        for x_i, y_i in zip(X_free, y_arr):
             opt.tell(list(map(float, x_i)), float(sign * y_i))
 
         asked = opt.ask(n_points=int(n_points), strategy=self.batch_strategy)
         if int(n_points) == 1 and not isinstance(asked[0], (list, tuple, np.ndarray)):
             asked = [asked]
-        out = np.asarray([self.space.project_to_feasible(x) for x in asked], dtype=float)
+        out = np.asarray([self._from_free(x) for x in asked], dtype=float)
         return out
+
+    def _free_index(self, name: str) -> int:
+        return self._free_names.index(name)
+
+    def _to_free(self, X: np.ndarray) -> np.ndarray:
+        idx = [self.space.index(n) for n in self._free_names]
+        return np.asarray(X[:, idx], dtype=float)
+
+    def _from_free(self, x_free) -> np.ndarray:
+        values = {n: 0.0 for n in self.space.names}
+        for name, val in zip(self._free_names, np.asarray(x_free, dtype=float).reshape(-1)):
+            values[name] = float(val)
+        values = self.space._apply_fixed_and_deps(values)
+        return self.space.project_to_feasible(self.space.to_array(values))
 
     def _make_optimizer(self):
         bounds = [
             (float(self.space.bounds[n][0]), float(self.space.bounds[n][1]))
-            for n in self.space.names
+            for n in self._free_names
         ]
         po_space = po.Space(bounds)
         opt = po.Optimizer(
@@ -112,9 +129,10 @@ class ScalarEISuggester:
             lhs=False,
             random_state=self.random_state,
         )
-        if self.space.sum_equals is not None:
+        # SumEquals on free dims only when there is no chemistry fixed/deps rewrite.
+        if self.space.sum_equals is not None and not self._constrained:
             constraints = Constraints(
-                [SumEquals(list(range(self.space.n_dims)), float(self.space.sum_equals))],
+                [SumEquals(list(range(len(self._free_names))), float(self.space.sum_equals))],
                 po_space,
             )
             opt.set_constraints(constraints)

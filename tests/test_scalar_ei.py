@@ -31,6 +31,32 @@ def test_scalar_ei_suggest_shape():
         space.check_feasible(row, tol=1e-3)
 
 
+def test_scalar_ei_with_fixed_and_linear_deps():
+    """Au-style chemistry space: free box → project onto fixed / deps / sum."""
+    space = DesignSpace(
+        names=["au", "ag", "peg", "ctab", "cit", "pvp", "ascorb", "teos"],
+        bounds={
+            "au": (3.3, 8.5),
+            "peg": (1e-3, 19.999),
+            "ctab": (1e-3, 19.999),
+            "cit": (1e-3, 19.999),
+            "pvp": (1e-3, 19.999),
+            "ag": (0.0, 1.0),
+            "ascorb": (0.0, 20.0),
+            "teos": (0.0, 1.0),
+        },
+        sum_equals=20.0,
+        fixed={"ag": 0.0, "teos": 0.0},
+        linear_deps={"ascorb": {"au": 1.2, "ag": 1.2}},
+    )
+    opt = ScalarEISuggester(space, random_state=0, maximize=True)
+    X = opt.sample_initial(5, seed=0)
+    y = -((X[:, 0] - 5.0) ** 2)
+    nxt = opt.suggest(X, y, n_points=1)
+    assert nxt.shape == (1, 8)
+    space.check_feasible(nxt[0], tol=1e-4)
+
+
 def test_mixer_session_csv_roundtrip(tmp_path: Path):
     cfg = MixerConfig(
         data_dir=str(tmp_path),
@@ -46,7 +72,12 @@ def test_mixer_session_csv_roundtrip(tmp_path: Path):
         time_separator=20.0,
         legacy_csv=True,
     )
-    mixer = MixerSession(cfg)
+    space = DesignSpace(
+        names=["A", "B", "C", "D"],
+        bounds={k: (1.0, 40.0) for k in "ABCD"},
+        sum_equals=50.0,
+    )
+    mixer = MixerSession(cfg, ScalarEISuggester(space, random_state=0, maximize=True))
     path0 = mixer.generate_lhs_iter0(n_points=3)
     assert Path(path0).is_file()
 
