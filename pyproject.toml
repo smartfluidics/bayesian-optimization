@@ -24,8 +24,9 @@ uncertainty = [
     "matplotlib>=3.7",
 ]
 hardware = [
-    # Private index required — see requirements-hardware.txt / README
+    # Private index required for smart_pump — see requirements-hardware.txt / README
     "smart_pump",
+    "pyserial>=3.5",
 ]
 dev = [
     "pytest>=7.0",

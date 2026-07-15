@@ -4,3 +4,4 @@
 #
 --extra-index-url https://lab:iUULBNNmgslKVjaX35MA@pypi.stud.mmcs.sfedu.ru
 smart_pump
+pyserial>=3.5

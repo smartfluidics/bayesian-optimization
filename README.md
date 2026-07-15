@@ -74,6 +74,9 @@ next_x = sug.suggest(X, Y, n_points=1)
 | [`examples/SLNP_bayes/bayes_mf_loop.ipynb`](examples/SLNP_bayes/bayes_mf_loop.ipynb) | Live MF loop: connect pumps → valves → LHS → `ScheduleRunner` → score → next suggestion |
 | [`examples/synthetic_test_slnp/synthetic_bayes_loop.ipynb`](examples/synthetic_test_slnp/synthetic_bayes_loop.ipynb) | Same SLNP API without hardware (synthetic yield + EI) |
 | [`examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb`](examples/Au_multispectral_synthetic/au_multispectral_synthetic.ipynb) | Synthetic Au: uncertainty sampling + EI toward a UV/SAXS target |
+| [`examples/printer_calibration/printer_calibration.ipynb`](examples/printer_calibration/printer_calibration.ipynb) | Dispenser (printer): home / jog / local origin / `tube_coordinates.json` |
+
+Hardware notes: [`bayesian_optimization/microfluidics/README.md`](bayesian_optimization/microfluidics/README.md).
 
 ## Install
 
@@ -84,10 +87,11 @@ pip install -e .
 pip install -e ".[uncertainty]"   # UncertaintySuggester (torch + gpytorch)
 ```
 
-### Hardware (`smart_pump`)
+### Hardware (`smart_pump` + dispenser / printer)
 
 ```bash
 pip install --extra-index-url https://lab:iUULBNNmgslKVjaX35MA@pypi.stud.mmcs.sfedu.ru smart_pump
+pip install pyserial   # Printer3DClient (dispenser / printer)
 ```
 
 ## Notes
